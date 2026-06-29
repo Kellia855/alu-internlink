@@ -8,5 +8,5 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const alu_InternLink());
+  runApp(const InternLinkApp());
 }
