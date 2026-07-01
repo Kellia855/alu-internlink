@@ -9,7 +9,12 @@ class Opportunity {
   final String duration;
   final String location;
   final DateTime deadline;
-  final String status; // "open" or "closed"
+  final String status;
+  final String companyName;
+  final String compensation;
+  final bool isVerified;
+  final String? imageUrl;
+  final String workType;
 
   Opportunity({
     required this.id,
@@ -21,6 +26,11 @@ class Opportunity {
     required this.location,
     required this.deadline,
     required this.status,
+    this.companyName = '',
+    this.compensation = '',
+    this.isVerified = false,
+    this.imageUrl,
+    this.workType = '',
   });
 
   factory Opportunity.fromDoc(DocumentSnapshot doc) {
@@ -35,6 +45,11 @@ class Opportunity {
       location: data['location'] ?? '',
       deadline: (data['deadline'] as Timestamp).toDate(),
       status: data['status'] ?? 'open',
+      companyName: data['companyName'] ?? '',
+      compensation: data['compensation'] ?? '',
+      isVerified: data['isVerified'] ?? false,
+      imageUrl: data['imageUrl'],
+      workType: data['workType'] ?? '',
     );
   }
 
@@ -48,6 +63,11 @@ class Opportunity {
       'location': location,
       'deadline': deadline,
       'status': status,
+      'companyName': companyName,
+      'compensation': compensation,
+      'isVerified': isVerified,
+      'imageUrl': imageUrl,
+      'workType': workType,
     };
   }
 }

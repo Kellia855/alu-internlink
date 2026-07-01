@@ -8,7 +8,7 @@ class InternLinkApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ALU InternLink',
+      title: 'InternLink',
       theme: AppTheme.lightTheme,
       initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,

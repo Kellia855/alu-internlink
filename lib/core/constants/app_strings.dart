@@ -1,4 +1,5 @@
 class AppStrings {
-  static const String appName = "ALU InternLink";
-  static const String tagline = "Connecting ALU Talent with Student Ventures";
+  static const String appName = 'InternLink';
+  static const String tagline =
+      'Bridge the gap between academic excellence and startup agility.';
 }

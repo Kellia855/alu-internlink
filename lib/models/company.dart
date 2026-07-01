@@ -1,5 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class TeamMember {
+  final String name;
+  final String role;
+  final String avatarUrl;
+
+  const TeamMember({
+    required this.name,
+    required this.role,
+    required this.avatarUrl,
+  });
+}
+
 class Company {
   final String id;
   final String name;
@@ -7,6 +19,11 @@ class Company {
   final bool verified;
   final String location;
   final String? logoUrl;
+  final String tagline;
+  final List<String> tags;
+  final List<TeamMember> teamMembers;
+  final int projectsShipped;
+  final int openInternships;
 
   Company({
     required this.id,
@@ -15,6 +32,11 @@ class Company {
     required this.verified,
     required this.location,
     this.logoUrl,
+    this.tagline = '',
+    this.tags = const [],
+    this.teamMembers = const [],
+    this.projectsShipped = 0,
+    this.openInternships = 0,
   });
 
   factory Company.fromDoc(DocumentSnapshot doc) {
@@ -26,6 +48,10 @@ class Company {
       verified: data['verified'] ?? false,
       location: data['location'] ?? '',
       logoUrl: data['logoUrl'],
+      tagline: data['tagline'] ?? '',
+      tags: List<String>.from(data['tags'] ?? []),
+      projectsShipped: data['projectsShipped'] ?? 0,
+      openInternships: data['openInternships'] ?? 0,
     );
   }
 
@@ -36,6 +62,10 @@ class Company {
       'verified': verified,
       'location': location,
       'logoUrl': logoUrl,
+      'tagline': tagline,
+      'tags': tags,
+      'projectsShipped': projectsShipped,
+      'openInternships': openInternships,
     };
   }
 }

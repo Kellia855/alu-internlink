@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../models/company.dart';
 import '../../../models/opportunity.dart';
+import '../../../core/mock/mock_data.dart';
+import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/app_header.dart';
+import '../../../core/widgets/tag_chip.dart';
+import '../../../core/constants/app_colors.dart';
+import 'opportunity_detail_screen.dart';
 
 class CompanyProfileScreen extends StatelessWidget {
   final String companyId;
@@ -9,113 +15,479 @@ class CompanyProfileScreen extends StatelessWidget {
   const CompanyProfileScreen({super.key, required this.companyId});
 
   Future<Company?> _fetchCompany() async {
-    final doc = await FirebaseFirestore.instance.collection('companies').doc(companyId).get();
-    if (doc.exists) {
-      return Company.fromDoc(doc);
-    }
+    if (useMockData) return mockVertexCompany();
+    final doc = await FirebaseFirestore.instance
+        .collection('companies')
+        .doc(companyId)
+        .get();
+    if (doc.exists) return Company.fromDoc(doc);
     return null;
   }
 
-  Stream<List<Opportunity>> _companyOpportunitiesStream() {
-    return FirebaseFirestore.instance
-        .collection('opportunities')
-        .where('startupId', isEqualTo: companyId)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Opportunity.fromDoc(doc)).toList());
+  List<Opportunity> _companyOpportunities() {
+    return mockOpportunities()
+        .where((o) => o.startupId == companyId)
+        .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Company Profile")),
-      body: FutureBuilder<Company?>(
-        future: _fetchCompany(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData) {
-            return const Center(child: Text("Company not found"));
-          }
-          final company = snapshot.data!;
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: company.logoUrl != null
-                          ? NetworkImage(company.logoUrl!)
-                          : null,
-                      child: company.logoUrl == null
-                          ? const Icon(Icons.business, size: 40)
-                          : null,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(company.name,
-                          style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    if (company.verified)
-                      const Icon(Icons.verified, color: Colors.red),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Text(company.description),
-                const SizedBox(height: 20),
+    return AppScaffold(
+      currentIndex: 1,
+      body: SafeArea(
+        child: FutureBuilder<Company?>(
+          future: _fetchCompany(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData) {
+              return const Center(child: Text('Company not found'));
+            }
+            final company = snapshot.data!;
+            final openings = useMockData
+                ? _companyOpportunities()
+                : <Opportunity>[];
 
-                // Location
-                Text("Location: ${company.location}"),
-                const SizedBox(height: 20),
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AppHeader(),
+                  _CompanyHero(company: company),
+                  const SizedBox(height: 20),
+                  _AboutSection(company: company),
+                  const SizedBox(height: 12),
+                  _TeamSection(company: company),
+                  const SizedBox(height: 12),
+                  _ImpactStats(company: company),
+                  const SizedBox(height: 20),
+                  _OpeningsSection(
+                    openings: openings,
+                    totalCount: company.openInternships,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
 
-                // Active Opportunities
-                Text("Active Opportunities",
-                    style: Theme.of(context).textTheme.titleMedium),
-                StreamBuilder<List<Opportunity>>(
-                  stream: _companyOpportunitiesStream(),
-                  builder: (context, oppSnapshot) {
-                    if (oppSnapshot.hasError) {
-                      return const Text("Error loading opportunities");
-                    }
-                    if (!oppSnapshot.hasData) {
-                      return const CircularProgressIndicator();
-                    }
-                    final opportunities = oppSnapshot.data!;
-                    if (opportunities.isEmpty) {
-                      return const Text("No active opportunities");
-                    }
-                    return Column(
-                      children: opportunities.map((opp) {
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          child: ListTile(
-                            title: Text(opp.title),
-                            subtitle: Text("${opp.location} • ${opp.duration}"),
-                            trailing: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushNamed(
-                                  context,
-                                  '/opportunityDetail',
-                                  arguments: opp,
-                                );
-                              },
-                              child: const Text("View"),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  },
+class _CompanyHero extends StatelessWidget {
+  final Company company;
+
+  const _CompanyHero({required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 12,
                 ),
               ],
             ),
-          );
-        },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: company.logoUrl != null
+                  ? Image.network(company.logoUrl!, fit: BoxFit.cover)
+                  : const Icon(Icons.business, size: 36),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            company.name,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 8),
+          if (company.verified)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.maroon.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.verified, size: 14, color: AppColors.maroon),
+                  SizedBox(width: 4),
+                  Text(
+                    'Verified Startup',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.maroon,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 8),
+          Text(
+            company.tagline,
+            style: const TextStyle(
+              fontStyle: FontStyle.italic,
+              color: AppColors.textSecondary,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.maroon,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
+                    ),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Follow'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: const Icon(Icons.share_outlined, size: 20),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AboutSection extends StatelessWidget {
+  final Company company;
+
+  const _AboutSection({required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'About ${company.name}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: AppColors.maroon,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              company.description,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
+            ),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: company.tags.map((t) => TagChip(t)).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TeamSection extends StatelessWidget {
+  final Company company;
+
+  const _TeamSection({required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Founding Team',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.maroon,
+                  ),
+                ),
+                Text(
+                  '${company.teamMembers.length} Members',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ...company.teamMembers.map(
+              (member) => Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundImage: NetworkImage(member.avatarUrl),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          member.name,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          member.role,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ImpactStats extends StatelessWidget {
+  final Company company;
+
+  const _ImpactStats({required this.company});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: AppColors.maroon,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'IMPACT STATS',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+                color: Colors.white70,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '${company.projectsShipped}+',
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+            const Text(
+              'Projects Shipped',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            const SizedBox(height: 16),
+            Divider(color: Colors.white.withValues(alpha: 0.2)),
+            const SizedBox(height: 16),
+            Text(
+              company.openInternships.toString().padLeft(2, '0'),
+              style: const TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+            const Text(
+              'Open Internships',
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OpeningsSection extends StatelessWidget {
+  final List<Opportunity> openings;
+  final int totalCount;
+
+  const _OpeningsSection({
+    required this.openings,
+    required this.totalCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Current Openings',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 12),
+          ...openings.take(2).map(
+                (opp) => _OpeningCard(opportunity: opp),
+              ),
+          const SizedBox(height: 8),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              onPressed: () {},
+              child: Text('View all $totalCount opportunities'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _OpeningCard extends StatelessWidget {
+  final Opportunity opportunity;
+
+  const _OpeningCard({required this.opportunity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  opportunity.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              if (opportunity.workType.isNotEmpty)
+                TagChip(
+                  opportunity.workType,
+                  backgroundColor: opportunity.workType == 'REMOTE'
+                      ? AppColors.accentBlueLight
+                      : AppColors.cardGrey,
+                  textColor: opportunity.workType == 'REMOTE'
+                      ? AppColors.accentBlue
+                      : AppColors.textSecondary,
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            opportunity.description,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              const Icon(Icons.schedule, size: 14, color: AppColors.textMuted),
+              const SizedBox(width: 4),
+              Text(
+                opportunity.duration,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        OpportunityDetailScreen(opportunity: opportunity),
+                  ),
+                ),
+                child: const Text(
+                  'Apply →',
+                  style: TextStyle(
+                    color: AppColors.maroon,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
