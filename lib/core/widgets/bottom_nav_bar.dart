@@ -14,15 +14,9 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
         child: Padding(
@@ -38,8 +32,8 @@ class BottomNavBar extends StatelessWidget {
                 onTap: () => onTap(0),
               ),
               _NavItem(
-                icon: Icons.grid_view_outlined,
-                activeIcon: Icons.grid_view,
+                icon: Icons.assignment_outlined,
+                activeIcon: Icons.assignment,
                 label: 'Apps',
                 isActive: currentIndex == 1,
                 onTap: () => onTap(1),
@@ -86,31 +80,32 @@ class _NavItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-            decoration: BoxDecoration(
-              color: isActive ? AppColors.accentLavender : Colors.transparent,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Icon(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: isActive ? AppColors.accentPurpleMuted : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
               isActive ? activeIcon : icon,
               size: 22,
-              color: isActive ? AppColors.accentBlue : AppColors.textMuted,
+              color: isActive ? AppColors.accentPeach : AppColors.textMuted,
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-              color: isActive ? AppColors.accentBlue : AppColors.textMuted,
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                color: isActive ? AppColors.accentPeach : AppColors.textMuted,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ class AppHeader extends StatelessWidget {
   final VoidCallback? onTrailingAction;
   final bool showNotifications;
   final bool showAvatar;
+  final bool showLogoAfterBack;
 
   const AppHeader({
     super.key,
@@ -17,6 +18,7 @@ class AppHeader extends StatelessWidget {
     this.onTrailingAction,
     this.showNotifications = true,
     this.showAvatar = true,
+    this.showLogoAfterBack = true,
   });
 
   @override
@@ -27,31 +29,31 @@ class AppHeader extends StatelessWidget {
         children: [
           if (showBack) ...[
             IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+              icon: const Icon(Icons.arrow_back, size: 22, color: AppColors.textPrimary),
               onPressed: onBack ?? () => Navigator.maybePop(context),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
-            const SizedBox(width: 8),
+            if (showLogoAfterBack) const SizedBox(width: 4),
           ],
           if (!showBack)
             CircleAvatar(
               radius: 18,
-              backgroundColor: AppColors.accentBlueLight,
+              backgroundColor: AppColors.cardGrey,
               backgroundImage: const NetworkImage(
                 'https://i.pravatar.cc/150?img=12',
               ),
             ),
           if (!showBack) const SizedBox(width: 12),
-          const Text(
-            'InternLink',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: AppColors.maroon,
-              fontFamily: 'Georgia',
+          if (!showBack || showLogoAfterBack)
+            const Text(
+              'InternLink',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: AppColors.accentPeach,
+              ),
             ),
-          ),
           const Spacer(),
           if (trailingAction != null)
             TextButton(
@@ -59,8 +61,9 @@ class AppHeader extends StatelessWidget {
               child: Text(
                 trailingAction!,
                 style: const TextStyle(
-                  color: AppColors.textSecondary,
+                  color: AppColors.accentPeach,
                   fontWeight: FontWeight.w500,
+                  fontSize: 14,
                 ),
               ),
             ),
@@ -75,7 +78,7 @@ class AppHeader extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, '/profile'),
               child: CircleAvatar(
                 radius: 18,
-                backgroundColor: AppColors.accentBlueLight,
+                backgroundColor: AppColors.cardGrey,
                 backgroundImage: const NetworkImage(
                   'https://i.pravatar.cc/150?img=12',
                 ),

@@ -9,7 +9,9 @@ class InternLinkApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'InternLink',
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
       initialRoute: AppRoutes.home,
       routes: AppRoutes.routes,
     );

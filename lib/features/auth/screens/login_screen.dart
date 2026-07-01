@@ -36,6 +36,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  InputDecoration _fieldDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: AppColors.textMuted),
+      prefixIcon: Icon(icon, color: AppColors.accentPeach, size: 20),
+      filled: true,
+      fillColor: AppColors.inputFill,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.border),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: AppColors.accentPeach),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,32 +68,15 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.maroon.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.link,
-                      color: AppColors.maroon,
-                      size: 28,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'InternLink',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.maroon,
-                      fontFamily: 'Georgia',
-                    ),
-                  ),
-                ],
+              const Icon(Icons.link, color: AppColors.accentPeach, size: 36),
+              const SizedBox(height: 8),
+              const Text(
+                'InternLink',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -87,15 +92,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      blurRadius: 20,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,9 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                     TextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(
-                        hintText: 'student@university.edu',
-                        prefixIcon: Icon(Icons.email_outlined, size: 20),
+                      style: const TextStyle(color: AppColors.textPrimary),
+                      decoration: _fieldDecoration(
+                        'student@university.edu',
+                        Icons.email_outlined,
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -138,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: const Text(
                             'Forgot?',
                             style: TextStyle(
-                              color: AppColors.accentBlue,
+                              color: AppColors.accentPeach,
                               fontSize: 13,
                             ),
                           ),
@@ -149,15 +148,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
-                      decoration: InputDecoration(
-                        hintText: '••••••••',
-                        prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                      style: const TextStyle(color: AppColors.textPrimary),
+                      decoration: _fieldDecoration('••••••••', Icons.lock_outline)
+                          .copyWith(
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined,
                             size: 20,
+                            color: AppColors.textMuted,
                           ),
                           onPressed: () =>
                               setState(() => _obscurePassword = !_obscurePassword),
@@ -166,7 +166,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 24),
                     _loading
-                        ? const Center(child: CircularProgressIndicator())
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.accentPeach,
+                            ),
+                          )
                         : PrimaryButton(
                             label: 'Sign In',
                             trailingIcon: Icons.arrow_forward,
@@ -175,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 24),
                     Row(
                       children: [
-                        Expanded(child: Divider(color: Colors.grey.shade300)),
+                        Expanded(child: Divider(color: Colors.grey.shade700)),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
@@ -188,28 +192,20 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        Expanded(child: Divider(color: Colors.grey.shade300)),
+                        Expanded(child: Divider(color: Colors.grey.shade700)),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _JoinCard(
-                            icon: Icons.school_outlined,
-                            label: 'Join as\nStudent',
-                            onTap: () => Navigator.pushReplacementNamed(context, '/'),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _JoinCard(
-                            icon: Icons.rocket_launch_outlined,
-                            label: 'Join as\nStartup',
-                            onTap: () => Navigator.pushReplacementNamed(context, '/'),
-                          ),
-                        ),
-                      ],
+                    const SizedBox(height: 16),
+                    _JoinCard(
+                      icon: Icons.school_outlined,
+                      label: 'Join as Student',
+                      onTap: () => Navigator.pushReplacementNamed(context, '/'),
+                    ),
+                    const SizedBox(height: 12),
+                    _JoinCard(
+                      icon: Icons.rocket_launch_outlined,
+                      label: 'Join as Startup',
+                      onTap: () => Navigator.pushReplacementNamed(context, '/'),
                     ),
                   ],
                 ),
@@ -265,24 +261,23 @@ class _JoinCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: AppColors.background,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.border),
         ),
         child: Column(
           children: [
-            Icon(icon, color: AppColors.accentBlue, size: 28),
+            Icon(icon, color: AppColors.accentPeach, size: 28),
             const SizedBox(height: 8),
             Text(
               label,
-              textAlign: TextAlign.center,
               style: const TextStyle(
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-                height: 1.3,
+                color: AppColors.textSecondary,
               ),
             ),
           ],

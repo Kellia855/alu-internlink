@@ -1,24 +1,48 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color maroon = Color(0xFF3F0C0C);
-  static const Color maroonDark = Color(0xFF2A0808);
-  static const Color maroonLight = Color(0xFF6B1515);
-  static const Color background = Color(0xFFF5F5F5);
-  static const Color surface = Colors.white;
-  static const Color cardGrey = Color(0xFFF0F0F0);
-  static const Color textPrimary = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color textMuted = Color(0xFF9CA3AF);
-  static const Color accentBlue = Color(0xFF6366F1);
-  static const Color accentBlueLight = Color(0xFFE0E7FF);
-  static const Color accentLavender = Color(0xFFC7D2FE);
-  static const Color verifiedBlue = Color(0xFF818CF8);
-  static const Color border = Color(0xFFE5E7EB);
-  static const Color borderLight = Color(0xFFF3F4F6);
-  static const Color success = Color(0xFF16A34A);
-  static const Color successLight = Color(0xFFDCFCE7);
+  // Dark theme base
+  static const Color background = Color(0xFF121212);
+  static const Color surface = Color(0xFF1E1E1E);
+  static const Color card = Color(0xFF1C1C1C);
+  static const Color cardElevated = Color(0xFF252525);
+  static const Color inputFill = Color(0xFF151515);
+
+  // Accents
+  static const Color accentPeach = Color(0xFFF8A491);
+  static const Color accentPeachDark = Color(0xFFE8927C);
+  static const Color accentPurple = Color(0xFF5E5678);
+  static const Color accentPurpleMuted = Color(0xFF4A4560);
+  static const Color verifiedPurple = Color(0xFF6B6585);
+
+  // Legacy aliases used across screens
+  static const Color maroon = accentPeach;
+  static const Color maroonDark = Color(0xFF8B0000);
+  static const Color maroonLight = accentPeachDark;
+
+  // Text
+  static const Color textPrimary = Color(0xFFFFFFFF);
+  static const Color textSecondary = Color(0xFFA0A0A0);
+  static const Color textMuted = Color(0xFF707070);
+  static const Color textOnPeach = Color(0xFF2A0808);
+
+  // UI elements
+  static const Color cardGrey = Color(0xFF2A2A2A);
+  static const Color border = Color(0xFF333333);
+  static const Color borderLight = Color(0xFF2A2A2A);
+  static const Color chatIncoming = Color(0xFF2C2C2C);
+
+  // Status
+  static const Color success = Color(0xFF4CAF50);
+  static const Color successLight = Color(0xFF1B3D1F);
+  static const Color impactRed = Color(0xFFE53935);
+  static const Color error = Color(0xFFEF5350);
+
+  // Deprecated light-mode aliases (mapped to dark equivalents)
+  static const Color accentBlue = accentPurple;
+  static const Color accentBlueLight = accentPurpleMuted;
+  static const Color accentLavender = accentPurpleMuted;
+  static const Color verifiedBlue = verifiedPurple;
+  static const Color profileHeaderBg = Color(0xFF2A2020);
   static const Color warning = Color(0xFFF59E0B);
-  static const Color error = Color(0xFFDC2626);
-  static const Color profileHeaderBg = Color(0xFFF5EDE8);
 }

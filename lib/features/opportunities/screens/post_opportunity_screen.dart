@@ -112,19 +112,14 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: AppColors.maroon.withValues(alpha: 0.15),
-                    ),
+                    border: Border.all(color: AppColors.border),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Role Title',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
+                      const SectionLabel('Role Title'),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _titleController,
@@ -134,10 +129,7 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        'Description',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
+                      const SectionLabel('Description'),
                       const SizedBox(height: 8),
                       TextField(
                         controller: _descriptionController,
@@ -149,10 +141,7 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        'Required Skills',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
+                      const SectionLabel('Required Skills'),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -197,7 +186,8 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.maroon,
+                            backgroundColor: AppColors.accentPeach,
+                            foregroundColor: AppColors.textOnPeach,
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(28),
@@ -261,7 +251,7 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: AppColors.border),
                   ),
@@ -333,12 +323,12 @@ class _PostOpportunityScreenState extends State<PostOpportunityScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F0EB),
+                    color: AppColors.card,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.verified, color: AppColors.maroon, size: 20),
+                      Icon(Icons.verified, color: AppColors.accentPeach, size: 20),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
@@ -373,12 +363,12 @@ class _StepIndicator extends StatelessWidget {
       child: Row(
         children: List.generate(steps.length * 2 - 1, (i) {
           if (i.isOdd) {
+            final leftStep = (i - 1) ~/ 2;
+            final lineActive = leftStep < currentStep;
             return Expanded(
               child: Container(
                 height: 2,
-                color: i ~/ 2 < currentStep
-                    ? AppColors.maroon
-                    : AppColors.border,
+                color: lineActive ? AppColors.accentPeach : AppColors.border,
               ),
             );
           }
@@ -390,14 +380,14 @@ class _StepIndicator extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.maroon : AppColors.border,
+                  color: isActive ? AppColors.accentPeach : AppColors.border,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: Text(
                     '${stepIndex + 1}',
                     style: TextStyle(
-                      color: isActive ? Colors.white : AppColors.textMuted,
+                      color: isActive ? AppColors.textOnPeach : AppColors.textMuted,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

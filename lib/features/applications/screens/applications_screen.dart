@@ -45,7 +45,7 @@ class ApplicationsScreen extends StatelessWidget {
                     icon: Icons.add_circle_outline,
                     title: 'Post a New Opportunity',
                     subtitle: 'Find the next generation of talent',
-                    color: AppColors.maroon,
+                    color: AppColors.accentPeach,
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -109,7 +109,7 @@ class _QuickActionCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
@@ -157,7 +157,7 @@ class _ApplicationTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -196,11 +196,11 @@ class _ApplicationTile extends StatelessWidget {
           StatusChip(
             label: app.statusLabel,
             backgroundColor: app.status == 'interviewing'
-                ? AppColors.maroon
-                : AppColors.accentLavender,
+                ? AppColors.maroonDark
+                : AppColors.accentPurpleMuted,
             textColor: app.status == 'interviewing'
-                ? Colors.white
-                : AppColors.accentBlue,
+                ? AppColors.accentPeach
+                : AppColors.accentPeach,
             showDot: app.status != 'under_review',
           ),
         ],

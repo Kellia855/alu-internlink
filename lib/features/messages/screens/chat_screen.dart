@@ -62,7 +62,7 @@ class _ChatAppBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.menu),
+            icon: const Icon(Icons.menu, color: AppColors.accentPeach),
             onPressed: () {},
           ),
           const Text(
@@ -70,16 +70,14 @@ class _ChatAppBar extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.maroon,
-              fontFamily: 'Georgia',
+              color: AppColors.accentPeach,
             ),
           ),
           const Spacer(),
           CircleAvatar(
             radius: 18,
-            backgroundImage: NetworkImage(
-              mockUserProfile().avatarUrl,
-            ),
+            backgroundColor: AppColors.cardGrey,
+            backgroundImage: NetworkImage(mockUserProfile().avatarUrl),
           ),
         ],
       ),
@@ -93,13 +91,13 @@ class _ChatHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         border: Border(bottom: BorderSide(color: AppColors.border)),
       ),
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+            icon: const Icon(Icons.arrow_back, size: 22, color: AppColors.textPrimary),
             onPressed: () {},
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
@@ -122,7 +120,7 @@ class _ChatHeader extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.success,
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 1.5),
+                    border: Border.all(color: AppColors.surface, width: 1.5),
                   ),
                 ),
               ),
@@ -135,7 +133,11 @@ class _ChatHeader extends StatelessWidget {
               children: [
                 Text(
                   'Nexus AI',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 Text(
                   'Recruiter (Online)',
@@ -148,11 +150,11 @@ class _ChatHeader extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.videocam_outlined),
+            icon: const Icon(Icons.videocam_outlined, color: AppColors.accentPeach),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.info_outline),
+            icon: const Icon(Icons.info_outline, color: AppColors.accentPeach),
             onPressed: () {},
           ),
         ],
@@ -195,8 +197,8 @@ class _MessageBubble extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: message.isSent
-                        ? AppColors.maroon
-                        : AppColors.cardGrey,
+                        ? AppColors.maroonDark
+                        : AppColors.chatIncoming,
                     borderRadius: BorderRadius.only(
                       topLeft: const Radius.circular(16),
                       topRight: const Radius.circular(16),
@@ -208,7 +210,7 @@ class _MessageBubble extends StatelessWidget {
                     message.text,
                     style: TextStyle(
                       color: message.isSent
-                          ? Colors.white
+                          ? AppColors.accentPeach
                           : AppColors.textPrimary,
                       fontSize: 14,
                       height: 1.4,
@@ -228,7 +230,7 @@ class _MessageBubble extends StatelessWidget {
                       const Icon(
                         Icons.done_all,
                         size: 14,
-                        color: AppColors.accentBlue,
+                        color: AppColors.accentPeach,
                       ),
                     ],
                   ],
@@ -254,46 +256,33 @@ class _MessageInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       child: SafeArea(
         top: false,
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.attach_file),
-              color: AppColors.textMuted,
+              icon: const Icon(Icons.attach_file, color: AppColors.accentPeach),
               onPressed: () {},
             ),
             Expanded(
               child: TextField(
+                style: const TextStyle(color: AppColors.textPrimary),
                 decoration: InputDecoration(
                   hintText: 'Type a message...',
+                  hintStyle: const TextStyle(color: AppColors.textMuted),
                   filled: true,
-                  fillColor: AppColors.background,
+                  fillColor: AppColors.cardGrey,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 10,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(
-                      color: AppColors.maroon.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(
-                      color: AppColors.maroon.withValues(alpha: 0.3),
-                    ),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
@@ -303,11 +292,11 @@ class _MessageInput extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: const BoxDecoration(
-                color: AppColors.maroon,
+                color: AppColors.accentPeach,
                 shape: BoxShape.circle,
               ),
               child: IconButton(
-                icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                icon: const Icon(Icons.send, color: AppColors.textOnPeach, size: 20),
                 onPressed: () {},
               ),
             ),

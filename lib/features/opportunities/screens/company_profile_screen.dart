@@ -87,51 +87,64 @@ class _CompanyHero extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 80,
-            height: 80,
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF5A1010), Color(0xFF2A0808)],
+              ),
               borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 12,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Expanded(child: SizedBox()),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    company.logoUrl ??
+                        'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200',
+                    width: 100,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ],
             ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: company.logoUrl != null
-                  ? Image.network(company.logoUrl!, fit: BoxFit.cover)
-                  : const Icon(Icons.business, size: 36),
-            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             company.name,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+            style: const TextStyle(
+              fontSize: 26,
+              fontWeight: FontWeight.w800,
+              color: AppColors.textPrimary,
+            ),
           ),
           const SizedBox(height: 8),
           if (company.verified)
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.maroon.withValues(alpha: 0.1),
+                color: AppColors.maroonDark.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.verified, size: 14, color: AppColors.maroon),
+                  Icon(Icons.verified, size: 14, color: AppColors.accentPeach),
                   SizedBox(width: 4),
                   Text(
                     'Verified Startup',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.maroon,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                 ],
@@ -145,7 +158,6 @@ class _CompanyHero extends StatelessWidget {
               color: AppColors.textSecondary,
               fontSize: 14,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Row(
@@ -153,14 +165,15 @@ class _CompanyHero extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.maroon,
+                    backgroundColor: AppColors.accentPeach,
+                    foregroundColor: AppColors.textOnPeach,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(28),
                     ),
                   ),
                   onPressed: () {},
-                  child: const Text('Follow'),
+                  child: const Text('Follow', style: TextStyle(fontWeight: FontWeight.w600)),
                 ),
               ),
               const SizedBox(width: 12),
@@ -171,7 +184,7 @@ class _CompanyHero extends StatelessWidget {
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColors.border),
                 ),
-                child: const Icon(Icons.share_outlined, size: 20),
+                child: const Icon(Icons.share_outlined, size: 20, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -194,7 +207,7 @@ class _AboutSection extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -205,7 +218,7 @@ class _AboutSection extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: AppColors.maroon,
+                color: AppColors.accentPeach,
               ),
             ),
             const SizedBox(height: 10),
@@ -243,7 +256,7 @@ class _TeamSection extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -257,7 +270,7 @@ class _TeamSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.maroon,
+                    color: AppColors.accentPeach,
                   ),
                 ),
                 Text(
@@ -314,7 +327,7 @@ class _ImpactStats extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.maroon,
+          color: AppColors.impactRed,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -335,7 +348,7 @@ class _ImpactStats extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppColors.surface,
               ),
             ),
             const Text(
@@ -350,7 +363,7 @@ class _ImpactStats extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: AppColors.surface,
               ),
             ),
             const Text(
@@ -394,12 +407,16 @@ class _OpeningsSection extends StatelessWidget {
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14),
+                side: const BorderSide(color: AppColors.border, style: BorderStyle.solid),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
               ),
               onPressed: () {},
-              child: Text('View all $totalCount opportunities'),
+              child: Text(
+                'View all $totalCount opportunities',
+                style: const TextStyle(color: AppColors.textMuted),
+              ),
             ),
           ),
         ],
@@ -419,7 +436,7 @@ class _OpeningCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.border),
       ),
@@ -480,7 +497,7 @@ class _OpeningCard extends StatelessWidget {
                 child: const Text(
                   'Apply →',
                   style: TextStyle(
-                    color: AppColors.maroon,
+                    color: AppColors.accentPeach,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

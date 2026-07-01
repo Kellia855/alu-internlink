@@ -35,19 +35,23 @@ class HomeScreen extends StatelessWidget {
             const AppHeader(showAvatar: false),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search roles (e.g. Frontend Developer)',
-                    prefixIcon: Icon(Icons.search, color: AppColors.textMuted),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
+              child: TextField(
+                style: const TextStyle(color: AppColors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Search roles (e.g. Frontend Developer)',
+                  hintStyle: const TextStyle(color: AppColors.textMuted),
+                  prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
+                  filled: true,
+                  fillColor: AppColors.card,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.border),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(color: AppColors.border),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14),
                 ),
               ),
             ),
@@ -61,7 +65,10 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(width: 8),
                   FilterChipWidget(label: 'Remote', icon: Icons.schedule),
                   SizedBox(width: 8),
-                  FilterChipWidget(label: 'Paid', icon: Icons.account_balance_wallet_outlined),
+                  FilterChipWidget(
+                    label: 'Paid',
+                    icon: Icons.account_balance_wallet_outlined,
+                  ),
                 ],
               ),
             ),
@@ -91,11 +98,13 @@ class HomeScreen extends StatelessWidget {
                     return const Center(child: Text('Error loading opportunities'));
                   }
                   if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                      child: CircularProgressIndicator(color: AppColors.accentPeach),
+                    );
                   }
                   final opportunities = snapshot.data!;
                   return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     itemCount: opportunities.length,
                     itemBuilder: (context, index) {
                       return _OpportunityCard(opportunity: opportunities[index]);
@@ -122,42 +131,49 @@ class _OpportunityCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.cardGrey,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100',
+                  width: 44,
+                  height: 44,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    width: 44,
+                    height: 44,
+                    color: AppColors.cardGrey,
+                    child: const Icon(Icons.business, color: AppColors.textMuted),
+                  ),
                 ),
-                child: const Icon(Icons.business, color: AppColors.textMuted),
               ),
               const Spacer(),
               if (opportunity.isVerified)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.accentBlueLight,
+                    color: AppColors.verifiedPurple.withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.verified, size: 12, color: AppColors.accentBlue),
+                      Icon(Icons.verified, size: 12, color: AppColors.accentPeach),
                       SizedBox(width: 4),
                       Text(
                         'VERIFIED STARTUP',
                         style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.accentBlue,
+                          color: AppColors.textPrimary,
                           letterSpacing: 0.5,
                         ),
                       ),
@@ -195,7 +211,7 @@ class _OpportunityCard extends StatelessWidget {
               '${opportunity.companyName} • ${opportunity.location}',
               style: const TextStyle(
                 fontSize: 13,
-                color: AppColors.textSecondary,
+                color: AppColors.accentPeach,
               ),
             ),
           ),
@@ -204,10 +220,13 @@ class _OpportunityCard extends StatelessWidget {
             spacing: 6,
             runSpacing: 6,
             children: opportunity.skillsRequired
-                .map((s) => TagChip(s, backgroundColor: Colors.white))
+                .map((s) => TagChip(s))
                 .toList(),
           ),
-          const SizedBox(height: 14),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 14),
+            child: Divider(height: 1, color: AppColors.border),
+          ),
           Row(
             children: [
               Text(
@@ -215,14 +234,15 @@ class _OpportunityCard extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.maroon,
+                  color: AppColors.accentPeach,
                 ),
               ),
               const Spacer(),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.maroon,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  backgroundColor: AppColors.accentPeach,
+                  foregroundColor: AppColors.textOnPeach,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                   minimumSize: Size.zero,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -234,7 +254,10 @@ class _OpportunityCard extends StatelessWidget {
                     builder: (_) => OpportunityDetailScreen(opportunity: opportunity),
                   ),
                 ),
-                child: const Text('Apply'),
+                child: const Text(
+                  'Apply',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),

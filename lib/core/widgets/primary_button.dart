@@ -19,10 +19,10 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final button = ElevatedButton(
+    return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.maroon,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.accentPeach,
+        foregroundColor: AppColors.textOnPeach,
         minimumSize: Size(expanded ? double.infinity : 0, height ?? 48),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         elevation: 0,
@@ -40,7 +40,5 @@ class PrimaryButton extends StatelessWidget {
         ],
       ),
     );
-
-    return button;
   }
 }

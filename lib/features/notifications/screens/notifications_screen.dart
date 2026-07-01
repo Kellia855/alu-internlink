@@ -46,33 +46,34 @@ class NotificationsScreen extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  ...notifications.map(
+                  ...notifications.take(3).map(
                     (n) => _NotificationCard(notification: n),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          'Yesterday',
-                          style: TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 12,
-                          ),
+                      const Text(
+                        'Yesterday',
+                        style: TextStyle(
+                          color: AppColors.accentPeach,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Expanded(child: Divider(color: Colors.grey.shade300)),
+                      const SizedBox(width: 12),
+                      Expanded(child: Divider(color: Colors.grey.shade800)),
                     ],
                   ),
+                  const SizedBox(height: 12),
+                  if (notifications.length > 3)
+                    _NotificationCard(notification: notifications[3]),
                   const SizedBox(height: 16),
                   const Text(
                     'Recommended for You',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textSecondary,
+                      color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -101,8 +102,9 @@ class _NotificationCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +118,11 @@ class _NotificationCard extends StatelessWidget {
                   color: notification.iconBg,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(notification.icon, size: 20, color: notification.typeColor),
+                child: Icon(
+                  notification.icon,
+                  size: 20,
+                  color: notification.iconColor,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -135,7 +141,7 @@ class _NotificationCard extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               IconButton(
-                icon: const Icon(Icons.more_vert, size: 18),
+                icon: const Icon(Icons.more_vert, size: 18, color: AppColors.textMuted),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 onPressed: () {},
@@ -145,14 +151,18 @@ class _NotificationCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             notification.message,
-            style: const TextStyle(fontSize: 14, height: 1.4),
+            style: const TextStyle(
+              fontSize: 14,
+              height: 1.4,
+              color: AppColors.textPrimary,
+            ),
           ),
           if (notification.tags != null) ...[
             const SizedBox(height: 10),
             Wrap(
               spacing: 6,
               children: notification.tags!
-                  .map((t) => TagChip(t, backgroundColor: AppColors.cardGrey))
+                  .map((t) => TagChip(t))
                   .toList(),
             ),
           ],
@@ -161,14 +171,16 @@ class _NotificationCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.cardGrey,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.border),
               ),
               child: Row(
                 children: [
                   const CircleAvatar(
                     radius: 14,
-                    child: Icon(Icons.business, size: 14),
+                    backgroundColor: AppColors.cardGrey,
+                    child: Icon(Icons.business, size: 14, color: AppColors.textMuted),
                   ),
                   const SizedBox(width: 8),
                   Expanded(
@@ -180,6 +192,7 @@ class _NotificationCard extends StatelessWidget {
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
+                            color: AppColors.textPrimary,
                           ),
                         ),
                         Text(
@@ -197,7 +210,8 @@ class _NotificationCard extends StatelessWidget {
             const SizedBox(height: 12),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.maroon,
+                backgroundColor: AppColors.accentPeach,
+                foregroundColor: AppColors.textOnPeach,
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 minimumSize: Size.zero,
                 shape: RoundedRectangleBorder(
@@ -240,7 +254,7 @@ class _RecommendationCard extends StatelessWidget {
             child: Icon(
               recommendation.icon,
               size: 64,
-              color: Colors.white.withValues(alpha: 0.15),
+              color: AppColors.accentPeach.withValues(alpha: 0.12),
             ),
           ),
           Column(
@@ -249,13 +263,13 @@ class _RecommendationCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: AppColors.accentPeach.withValues(alpha: 0.25),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   recommendation.tag,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.accentPeach,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -265,7 +279,7 @@ class _RecommendationCard extends StatelessWidget {
               Text(
                 recommendation.title,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.accentPeach,
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
                 ),
@@ -274,7 +288,7 @@ class _RecommendationCard extends StatelessWidget {
               Text(
                 recommendation.description,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: AppColors.accentPeach.withValues(alpha: 0.85),
                   fontSize: 13,
                   height: 1.4,
                 ),
@@ -282,8 +296,8 @@ class _RecommendationCard extends StatelessWidget {
               const SizedBox(height: 14),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: recommendation.gradient.first,
+                  backgroundColor: AppColors.accentPeach,
+                  foregroundColor: AppColors.textOnPeach,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   minimumSize: Size.zero,
                   shape: RoundedRectangleBorder(

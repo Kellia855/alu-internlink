@@ -29,7 +29,7 @@ class ProfileScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -80,7 +80,8 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.maroon,
+                        backgroundColor: AppColors.accentPeach,
+                        foregroundColor: AppColors.textOnPeach,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
                           vertical: 8,
@@ -119,7 +120,7 @@ class _ProfileHeaderCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -248,11 +249,11 @@ class _ApplicationCard extends StatelessWidget {
   Color _statusBg() {
     switch (app.status) {
       case 'interviewing':
-        return AppColors.maroon;
+        return AppColors.maroonDark;
       case 'closed':
         return AppColors.cardGrey;
       default:
-        return AppColors.accentLavender;
+        return AppColors.accentPurpleMuted;
     }
   }
 
@@ -263,7 +264,7 @@ class _ApplicationCard extends StatelessWidget {
       case 'closed':
         return AppColors.textMuted;
       default:
-        return AppColors.accentBlue;
+        return AppColors.accentPeach;
     }
   }
 
@@ -274,7 +275,7 @@ class _ApplicationCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Column(

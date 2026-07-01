@@ -24,9 +24,7 @@ class TagChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: backgroundColor ?? AppColors.cardGrey,
         borderRadius: BorderRadius.circular(20),
-        border: backgroundColor == null
-            ? Border.all(color: AppColors.border)
-            : null,
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -75,7 +73,7 @@ class FilterChipWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.border),
       ),
@@ -143,6 +141,25 @@ class StatusChip extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SectionLabel extends StatelessWidget {
+  final String label;
+
+  const SectionLabel(this.label, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label.toUpperCase(),
+      style: const TextStyle(
+        fontSize: 10,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 1.2,
+        color: AppColors.textMuted,
       ),
     );
   }

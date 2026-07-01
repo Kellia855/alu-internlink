@@ -32,18 +32,11 @@ class OpportunityDetailScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.surface,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: AppColors.maroon.withValues(alpha: 0.15),
+                            color: AppColors.border,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.06),
-                              blurRadius: 16,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,8 +46,7 @@ class OpportunityDetailScreen extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.maroon,
-                                fontFamily: 'Georgia',
+                                color: AppColors.accentPeach,
                               ),
                             ),
                             const SizedBox(height: 16),
@@ -93,7 +85,7 @@ class OpportunityDetailScreen extends StatelessWidget {
                                       width: 6,
                                       height: 6,
                                       decoration: const BoxDecoration(
-                                        color: AppColors.maroon,
+                                        color: AppColors.accentPeach,
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -124,15 +116,9 @@ class OpportunityDetailScreen extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
-                  blurRadius: 12,
-                  offset: const Offset(0, -2),
-                ),
-              ],
+            decoration: const BoxDecoration(
+              color: AppColors.surface,
+              border: Border(top: BorderSide(color: AppColors.border)),
             ),
             child: SafeArea(
               top: false,
@@ -143,9 +129,7 @@ class OpportunityDetailScreen extends StatelessWidget {
                     height: 52,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.maroon.withValues(alpha: 0.3),
-                      ),
+                      border: Border.all(color: AppColors.border),
                     ),
                     child: const Icon(
                       Icons.bookmark_border,
@@ -156,7 +140,8 @@ class OpportunityDetailScreen extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.maroon,
+                        backgroundColor: AppColors.accentPeach,
+                        foregroundColor: AppColors.textOnPeach,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28),

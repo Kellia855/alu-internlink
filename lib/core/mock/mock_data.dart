@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/opportunity.dart';
 import '../../models/company.dart';
+import '../constants/app_colors.dart';
 
 const bool useMockData = true;
 
@@ -211,6 +212,7 @@ class MockNotification {
   final Color typeColor;
   final IconData icon;
   final Color iconBg;
+  final Color iconColor;
   final List<String>? tags;
   final String? actionLabel;
   final String? nestedPreview;
@@ -223,6 +225,7 @@ class MockNotification {
     required this.typeColor,
     required this.icon,
     required this.iconBg,
+    required this.iconColor,
     this.tags,
     this.actionLabel,
     this.nestedPreview,
@@ -237,9 +240,10 @@ List<MockNotification> mockNotifications() {
       timeAgo: '2h ago',
       message:
           'Your application for Frontend Developer at Vertex Systems is now Under Review.',
-      typeColor: Color(0xFF6B7280),
+      typeColor: AppColors.accentPeach,
       icon: Icons.assignment_turned_in_outlined,
-      iconBg: Color(0xFFFEE2E2),
+      iconBg: Color(0xFF3D1515),
+      iconColor: Colors.white,
       actionLabel: 'View Details',
     ),
     MockNotification(
@@ -247,9 +251,10 @@ List<MockNotification> mockNotifications() {
       timeAgo: '5h ago',
       message:
           'Solar Energy is looking for a Growth Marketer. This matches your skill profile.',
-      typeColor: Color(0xFF6366F1),
+      typeColor: AppColors.accentPeach,
       icon: Icons.work_outline,
-      iconBg: Color(0xFFE0E7FF),
+      iconBg: Color(0xFF3D3A55),
+      iconColor: AppColors.accentPeach,
       tags: ['Marketing', 'Remote'],
     ),
     MockNotification(
@@ -257,9 +262,10 @@ List<MockNotification> mockNotifications() {
       timeAgo: '1d ago',
       message:
           'You have a new message from Bloom Learning regarding your technical assessment.',
-      typeColor: Color(0xFF6B7280),
+      typeColor: AppColors.accentPeach,
       icon: Icons.chat_bubble_outline,
-      iconBg: Color(0xFFF3F4F6),
+      iconBg: Color(0xFF2A2A2A),
+      iconColor: AppColors.textSecondary,
       nestedSender: 'Bloom Learning',
       nestedPreview: "Hi Alex, we've reviewed your...",
     ),
@@ -268,9 +274,10 @@ List<MockNotification> mockNotifications() {
       timeAgo: '1d ago',
       message:
           'Congratulations! Your application for Product Design Intern at Pulse AI has been accepted.',
-      typeColor: Color(0xFF16A34A),
+      typeColor: AppColors.success,
       icon: Icons.check_circle_outline,
-      iconBg: Color(0xFFDCFCE7),
+      iconBg: Color(0xFF1B3D1F),
+      iconColor: AppColors.success,
     ),
   ];
 }
@@ -341,7 +348,7 @@ List<MockRecommendation> mockRecommendations() {
       description:
           'Stripe is looking for researchers to join their EMEA team for the summer cohort.',
       tag: 'High Match',
-      gradient: [Color(0xFF3F0C0C), Color(0xFF6B1515)],
+      gradient: [Color(0xFF4A0E0E), Color(0xFF2A0808)],
       icon: Icons.rocket_launch_outlined,
     ),
     MockRecommendation(
@@ -350,7 +357,7 @@ List<MockRecommendation> mockRecommendations() {
       description:
           'Cloud9 Infrastructure is hiring for junior DevOps roles in Lagos and Nairobi.',
       tag: 'Hot Job',
-      gradient: [Color(0xFF4338CA), Color(0xFF6366F1)],
+      gradient: [Color(0xFF3D3A55), Color(0xFF2A2840)],
       icon: Icons.cloud_outlined,
     ),
   ];
