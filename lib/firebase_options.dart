@@ -4,16 +4,26 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
+/// ---------------------------------------------------------------------
+/// PLACEHOLDER FILE
+/// ---------------------------------------------------------------------
+/// This is a stand-in for the real file the FlutterFire CLI generates.
+/// Before running the app, replace this file by running, from the
+/// project root:
 ///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
+///   dart pub global activate flutterfire_cli
+///   flutterfire configure
+///
+/// That command will:
+///   1. Prompt you to select (or create) a Firebase project.
+///   2. Register your Android/iOS/Web apps with that project.
+///   3. Overwrite this file with real API keys and app IDs.
+///   4. Drop `google-services.json` into `android/app/` and
+///      `GoogleService-Info.plist` into `ios/Runner/` automatically.
+///
+/// Do NOT commit real production keys to a public repo if this were a
+/// real project -- treat this file like the other platform config files.
+/// ---------------------------------------------------------------------
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -27,11 +37,14 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         return macos;
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'run `flutterfire configure` to generate real options.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+          'run `flutterfire configure` to generate real options.',
         );
       default:
         throw UnsupportedError(
@@ -41,46 +54,37 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDlBkDdKgLBnec_OL4p0On7E_xeijmCbU0',
-    appId: '1:600076654016:web:4f2ea9227235c5f86ee425',
-    messagingSenderId: '600076654016',
-    projectId: 'alu-internlink',
-    authDomain: 'alu-internlink.firebaseapp.com',
-    storageBucket: 'alu-internlink.firebasestorage.app',
+    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    projectId: 'internlink-app',
+    authDomain: 'internlink-app.firebaseapp.com',
+    storageBucket: 'internlink-app.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDAGl2iVi1VC1DaILiLsW_q2e9SIBaHG3A',
-    appId: '1:600076654016:android:6d96fdf32ea86b336ee425',
-    messagingSenderId: '600076654016',
-    projectId: 'alu-internlink',
-    storageBucket: 'alu-internlink.firebasestorage.app',
+    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    projectId: 'internlink-app',
+    storageBucket: 'internlink-app.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDQw4VN9JFRniiwpzKzmyz3xMysiXNADNA',
-    appId: '1:600076654016:ios:9594b70a34525d0c6ee425',
-    messagingSenderId: '600076654016',
-    projectId: 'alu-internlink',
-    storageBucket: 'alu-internlink.firebasestorage.app',
-    iosBundleId: 'com.example.aluInternlink',
+    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    projectId: 'internlink-app',
+    storageBucket: 'internlink-app.appspot.com',
+    iosBundleId: 'com.internlink.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDQw4VN9JFRniiwpzKzmyz3xMysiXNADNA',
-    appId: '1:600076654016:ios:9594b70a34525d0c6ee425',
-    messagingSenderId: '600076654016',
-    projectId: 'alu-internlink',
-    storageBucket: 'alu-internlink.firebasestorage.app',
-    iosBundleId: 'com.example.aluInternlink',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDlBkDdKgLBnec_OL4p0On7E_xeijmCbU0',
-    appId: '1:600076654016:web:292abdc093c24cfe6ee425',
-    messagingSenderId: '600076654016',
-    projectId: 'alu-internlink',
-    authDomain: 'alu-internlink.firebaseapp.com',
-    storageBucket: 'alu-internlink.firebasestorage.app',
+    apiKey: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    appId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    messagingSenderId: 'REPLACE_WITH_FLUTTERFIRE_CONFIGURE_OUTPUT',
+    projectId: 'internlink-app',
+    storageBucket: 'internlink-app.appspot.com',
+    iosBundleId: 'com.internlink.app',
   );
 }

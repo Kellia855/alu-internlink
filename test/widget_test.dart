@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:alu_internlink/core/theme/app_theme.dart';
 import 'package:alu_internlink/features/home/screens/home_screen.dart';
 
+
 void main() {
   testWidgets('Home screen renders InternLink branding', (WidgetTester tester) async {
     await tester.pumpWidget(
@@ -12,7 +13,9 @@ void main() {
       ),
     );
 
+    await tester.pump();
+
     expect(find.text('InternLink'), findsOneWidget);
-    expect(find.text('New Opportunities'), findsOneWidget);
+    expect(find.text('Featured Opportunities'), findsOneWidget);
   });
 }

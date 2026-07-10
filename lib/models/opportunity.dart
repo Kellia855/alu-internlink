@@ -1,73 +1,87 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Fixed set of categories used for the "Browse by category" grid.
+class OpportunityCategory {
+  OpportunityCategory._();
+  static const String design = 'Design';
+  static const String engineering = 'Engineering';
+  static const String marketing = 'Marketing';
+  static const String data = 'Data';
+  static const String other = 'Other';
+
+  static const List<String> all = [design, engineering, marketing, data, other];
+}
+
+/// Mirrors a document in the top-level `opportunities` Firestore collection.
 class Opportunity {
   final String id;
-  final String startupId;
   final String title;
-  final String description;
-  final List<String> skillsRequired;
-  final String duration;
-  final String location;
-  final DateTime deadline;
-  final String status;
   final String companyName;
-  final String compensation;
-  final bool isVerified;
+  final String startupId;
+  final bool verified;
+  final DateTime? createdAt;
   final String? imageUrl;
-  final String workType;
+  final String description;
 
-  Opportunity({
+  // Optional extra fields kept flexible for a richer listing UI.
+  // Firestore is schema-less, so these are safe to omit on write.
+  final String? location;
+  final List<String> skillsRequired;
+  final String category; // Design, Engineering, Marketing, Data, Other
+  final String commitment; // e.g. "Part-time (8-10 hrs/week)"
+
+  const Opportunity({
     required this.id,
-    required this.startupId,
     required this.title,
+    required this.companyName,
+    required this.startupId,
+    required this.verified,
+    required this.createdAt,
+    required this.imageUrl,
     required this.description,
-    required this.skillsRequired,
-    required this.duration,
-    required this.location,
-    required this.deadline,
-    required this.status,
-    this.companyName = '',
-    this.compensation = '',
-    this.isVerified = false,
-    this.imageUrl,
-    this.workType = '',
+    this.location,
+    this.skillsRequired = const [],
+    this.category = OpportunityCategory.other,
+    this.commitment = '',
   });
 
-  factory Opportunity.fromDoc(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  factory Opportunity.fromMap(String id, Map<String, dynamic> map) {
     return Opportunity(
-      id: doc.id,
-      startupId: data['startupId'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      skillsRequired: List<String>.from(data['skillsRequired'] ?? []),
-      duration: data['duration'] ?? '',
-      location: data['location'] ?? '',
-      deadline: (data['deadline'] as Timestamp).toDate(),
-      status: data['status'] ?? 'open',
-      companyName: data['companyName'] ?? '',
-      compensation: data['compensation'] ?? '',
-      isVerified: data['isVerified'] ?? false,
-      imageUrl: data['imageUrl'],
-      workType: data['workType'] ?? '',
+      id: id,
+      title: (map['title'] as String?) ?? '',
+      companyName: (map['companyName'] as String?) ?? '',
+      startupId: (map['startupId'] as String?) ?? '',
+      verified: (map['verified'] as bool?) ?? false,
+      createdAt: (map['createdAt'] is Timestamp)
+          ? (map['createdAt'] as Timestamp).toDate()
+          : null,
+      imageUrl: map['imageUrl'] as String?,
+      description: (map['description'] as String?) ?? '',
+      location: map['location'] as String?,
+      skillsRequired:
+          List<String>.from(map['skillsRequired'] as List? ?? const []),
+      category: (map['category'] as String?) ?? OpportunityCategory.other,
+      commitment: (map['commitment'] as String?) ?? '',
     );
+  }
+
+  factory Opportunity.fromDoc(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return Opportunity.fromMap(doc.id, doc.data() ?? const {});
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'startupId': startupId,
       'title': title,
-      'description': description,
-      'skillsRequired': skillsRequired,
-      'duration': duration,
-      'location': location,
-      'deadline': deadline,
-      'status': status,
       'companyName': companyName,
-      'compensation': compensation,
-      'isVerified': isVerified,
+      'startupId': startupId,
+      'verified': verified,
+      'createdAt': FieldValue.serverTimestamp(),
       'imageUrl': imageUrl,
-      'workType': workType,
+      'description': description,
+      'location': location,
+      'skillsRequired': skillsRequired,
+      'category': category,
+      'commitment': commitment,
     };
   }
 }
