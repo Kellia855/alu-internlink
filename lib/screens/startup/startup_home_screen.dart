@@ -34,7 +34,7 @@ class StartupHomeScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
           AppHeaderBar(
-            greeting: 'Hello, ${profile.companyName} 👋',
+            greeting: 'Hello, ${profile.companyName}!',
             subtitle: profile.verified
                 ? 'Here is your recruiting overview.'
                 : 'Your account is pending verification.',
@@ -61,6 +61,12 @@ class StartupHomeScreen extends StatelessWidget {
                       opportunities.where((o) => o.verified).length;
                   final pendingCount =
                       applications.where((a) => a.status == 'pending').length;
+
+
+                  // Optional: show debugging if Firestore data isn't showing
+                  // up correctly on the startup side.
+                  // print('Startup ${profile.uid} opportunities count: ${opportunities.length}');
+
 
                   return Card(
                     child: Padding(

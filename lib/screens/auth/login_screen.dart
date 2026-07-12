@@ -76,13 +76,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         gradient: AppColors.headerGradient,
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      child: const Icon(Icons.link_rounded,
-                          color: AppColors.white, size: 38),
+                      alignment: Alignment.center,
+                      child: Image.asset(
+                        'assets/logo.png',
+                        width: 44,
+                        height: 44,
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   const Text(
-                    'Welcome back',
+                    'InternLink',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
@@ -92,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 6),
                   const Text(
-                    'Log in to InternLink to continue',
+                    '~ Where ambition meets opportunity ~',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: AppColors.grey, fontSize: 14),
                   ),

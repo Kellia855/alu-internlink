@@ -9,10 +9,7 @@ import '../services/auth_service.dart';
 enum AuthStatus { unknown, signedOut, signedIn }
 
 /// Single source of truth for "who is logged in and what is their role".
-///
-/// Listens to FirebaseAuth's auth-state stream; once a user signs in it
-/// subscribes to their `users/{uid}` document so role, verification, and
-/// skills stay live across the app (e.g. profile edits reflect instantly).
+
 class UserProvider extends ChangeNotifier {
   UserProvider({AuthService? authService})
       : _authService = authService ?? AuthService() {

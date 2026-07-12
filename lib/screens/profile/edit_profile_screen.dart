@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user_profile.dart';
 import '../../providers/user_provider.dart';
+import '../../services/profile_photo_service.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
@@ -26,6 +30,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _skillController = TextEditingController();
   late List<String> _skills;
   bool _saving = false;
+
+  bool _uploadingPhoto = false;
+  final _photoService = ProfilePhotoService();
+
 
   @override
   void initState() {
@@ -54,10 +62,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
+  Future<void> _pickAndUploadPhoto() async {
+    final userProvider = context.read<UserProvider>();
+    final profile = userProvider.profile;
+    if (profile == null) return;
+
+    final picker = ImagePicker();
+    final xfile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
+    if (xfile == null) return;
+
+    // `putData` upload approach requires bytes instead of File.
+    final bytes = await xfile.readAsBytes();
+    final ext = xfile.name.split('.').last;
+
+    setState(() => _uploadingPhoto = true);
+    try {
+      final downloadUrl = await _photoService.uploadProfilePhotoBytes(
+        uid: profile.uid,
+        bytes: bytes,
+        fileExtension: ext,
+      );
+
+      if (downloadUrl == null || !mounted) return;
+
+      await userProvider.authService.uploadAndSetProfilePhoto(
+        uid: profile.uid,
+        photoDownloadUrl: downloadUrl,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Profile photo updated.')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not upload photo. Try again.')),
+      );
+    } finally {
+      if (mounted) setState(() => _uploadingPhoto = false);
+    }
+  }
+
   Future<void> _save() async {
     final userProvider = context.read<UserProvider>();
     final profile = userProvider.profile;
     if (profile == null) return;
+
 
     final name = _nameController.text.trim();
     if (name.isEmpty) {
@@ -95,12 +149,76 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: const AppBar(title: Text('My profile')),
+      appBar: AppBar(title: const Text('My profile')),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Center(
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      CircleAvatar(
+                        radius: 44,
+                        backgroundColor: AppColors.navy,
+                        backgroundImage:
+                            (profile.photoUrl != null && profile.photoUrl!.isNotEmpty)
+                                ? NetworkImage(profile.photoUrl!)
+                                : null,
+                        child: (profile.photoUrl == null || profile.photoUrl!.isEmpty)
+                            ? Text(
+                                profile.name.isNotEmpty ? profile.name[0].toUpperCase() : '?',
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: InkWell(
+                          onTap: _uploadingPhoto ? null : _pickAndUploadPhoto,
+                          borderRadius: BorderRadius.circular(24),
+                          child: Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: AppColors.maroon,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: _uploadingPhoto
+                                ? const SizedBox(
+                                    width: 18,
+                                    height: 18,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: AppColors.white,
+                                    ),
+                                  )
+                                : const Icon(Icons.camera_alt_rounded,
+                                    color: AppColors.white),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Tap the camera to upload a profile photo',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.grey, fontSize: 12.5),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
             CustomTextField(
               controller: _nameController,
               label: isStartup ? 'Company name' : 'Full name',

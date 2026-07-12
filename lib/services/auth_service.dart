@@ -95,6 +95,17 @@ class AuthService {
     await _usersRef.doc(uid).update(data);
   }
 
+  Future<void> uploadAndSetProfilePhoto({
+    required String uid,
+    required String photoDownloadUrl,
+  }) async {
+    // photoDownloadUrl comes from Firebase Storage; we only persist it.
+    await updateProfile(
+      uid: uid,
+      photoUrl: photoDownloadUrl,
+    );
+  }
+
   Stream<UserProfile?> watchUserProfile(String uid) {
     return _usersRef.doc(uid).snapshots().map(
           (doc) => doc.exists ? UserProfile.fromDoc(doc) : null,

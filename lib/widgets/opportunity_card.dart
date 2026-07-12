@@ -59,7 +59,8 @@ class OpportunityCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Logo(imageUrl: opportunity.imageUrl, size: 44),
+            _LogoFallback(category: opportunity.category),
+
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -122,7 +123,8 @@ class OpportunityCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Logo(imageUrl: opportunity.imageUrl, size: 48),
+              _LogoFallback(category: opportunity.category),
+
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -273,39 +275,39 @@ class _SkillChip extends StatelessWidget {
   }
 }
 
-class _Logo extends StatelessWidget {
-  const _Logo({required this.imageUrl, this.size = 48});
-  final String? imageUrl;
-  final double size;
+
+
+class _LogoFallback extends StatelessWidget {
+  const _LogoFallback({required this.category});
+
+  final String category;
+
+  IconData _iconForCategory(String c) {
+    switch (c) {
+      case OpportunityCategory.design:
+        return Icons.palette_outlined;
+      case OpportunityCategory.engineering:
+        return Icons.build_outlined;
+      case OpportunityCategory.marketing:
+        return Icons.campaign_outlined;
+      case OpportunityCategory.data:
+        return Icons.storage_outlined;
+      case OpportunityCategory.other:
+      default:
+        return Icons.info_outline;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: AppColors.lightGrey.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: (imageUrl != null && imageUrl!.isNotEmpty)
-          ? Image.network(
-              imageUrl!,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const _LogoFallback(),
-            )
-          : const _LogoFallback(),
+    return Icon(
+      _iconForCategory(category),
+      color: AppColors.navy,
+      size: 28,
     );
   }
 }
 
-class _LogoFallback extends StatelessWidget {
-  const _LogoFallback();
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.business, color: AppColors.navy);
-  }
-}
 
 class _PendingChip extends StatelessWidget {
   const _PendingChip();

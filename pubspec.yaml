@@ -16,6 +16,10 @@ dependencies:
   firebase_core: ^2.31.0
   firebase_auth: ^4.19.5
   cloud_firestore: ^4.17.3
+  firebase_storage: ^11.7.7
+
+  # Profile photo upload
+  image_picker: ^1.1.2
 
   # State management
   provider: ^6.1.2
@@ -33,6 +37,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # Uncomment and add assets here if you add images/logos
-  # assets:
-  #   - assets/
+  assets:
+    - assets/logo.png
+

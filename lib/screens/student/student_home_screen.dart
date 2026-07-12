@@ -56,8 +56,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
           children: [
             AppHeaderBar(
-              greeting: 'Hello, $firstName 👋',
-              subtitle: 'Find meaningful ways to contribute.',
+              greeting: 'Hello, $firstName!',
+              subtitle: 'Find meaningful ways to grow your portifolio.',
               photoUrl: profile?.photoUrl,
               initials: firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
             ),

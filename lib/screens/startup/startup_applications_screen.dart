@@ -83,10 +83,13 @@ class _StartupApplicationsScreenState
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
-                    return const Center(
-                      child: Text(
-                        'Could not load applicants.',
-                        style: TextStyle(color: AppColors.grey),
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(
+                          'Could not load applicants.\n\n${snapshot.error}',
+                          style: const TextStyle(color: AppColors.grey),
+                        ),
                       ),
                     );
                   }

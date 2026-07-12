@@ -41,7 +41,7 @@ class _AuthGateState extends State<AuthGate> {
             ? SignupScreen(onToggleMode: () => setState(() => _showSignup = false))
             : LoginScreen(onToggleMode: () => setState(() => _showSignup = true));
       case AuthStatus.signedIn:
-        // Reset so a future logout always lands back on LoginScreen first.
+
         _showSignup = false;
         return const MainShell();
     }

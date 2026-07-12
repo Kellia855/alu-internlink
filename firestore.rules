@@ -44,20 +44,22 @@ service cloud.firestore {
     // Applications
     // ----------------------------
     match /applications/{applicationId} {
+      // Authenticated users can create an application
       allow create: if request.auth != null;
 
       // Students can read their own applications
       allow read: if request.auth != null && resource.data.studentId == request.auth.uid;
 
-      // Startups can read applications for their opportunities
-      allow read: if request.auth != null && exists(
-        /databases/$(database)/documents/opportunities/$(resource.data.opportunityId)
-      ) && get(
-        /databases/$(database)/documents/opportunities/$(resource.data.opportunityId)
-      ).data.startupId == request.auth.uid;
+      // Startups can read applications they've received
+      // (use the denormalized startupId already stored on the application doc)
+      allow read: if request.auth != null && resource.data.startupId == request.auth.uid;
 
       // Only the student who created the application can update it.
-      allow update, delete: if request.auth != null && resource.data.studentId == request.auth.uid;
+      // Startups can update status for applications they've received.
+      allow update, delete: if request.auth != null && (
+        resource.data.studentId == request.auth.uid
+        || resource.data.startupId == request.auth.uid
+      );
     }
 
     // ----------------------------

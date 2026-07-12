@@ -76,6 +76,12 @@ class _StudentDiscoverScreenState extends State<StudentDiscoverScreen> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   if (snapshot.hasError) {
+                    // Print the actual Firestore error so you can see
+                    // whether this is a permissions/rules issue, query/index
+                    // issue, or auth timing issue.
+                    // ignore: avoid_print
+                    print('StudentDiscoverScreen stream error: ${snapshot.error}');
+
                     return const Center(
                       child: Text(
                         'Could not load opportunities.',

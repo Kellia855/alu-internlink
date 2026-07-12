@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:alu_internlink/core/theme/app_theme.dart';
-import 'package:alu_internlink/features/home/screens/home_screen.dart';
+
+import 'package:internlink/theme/app_theme.dart';
+
+
+import 'package:internlink/screens/splash_screen.dart';
 
 
 void main() {
-  testWidgets('Home screen renders InternLink branding', (WidgetTester tester) async {
+  testWidgets('Splash screen renders InternLink branding', (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         theme: AppTheme.lightTheme,
-        home: const HomeScreen(),
+        home: const SplashScreen(),
       ),
     );
 
     await tester.pump();
 
     expect(find.text('InternLink'), findsOneWidget);
-    expect(find.text('Featured Opportunities'), findsOneWidget);
   });
 }
+

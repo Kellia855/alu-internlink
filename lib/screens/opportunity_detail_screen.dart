@@ -43,16 +43,30 @@ class _OpportunityDetailScreenState extends State<OpportunityDetailScreen> {
       setState(() => _checking = false);
       return;
     }
-    final applied = await _firestoreService.hasApplied(
-      studentId: profile.uid,
-      opportunityId: widget.opportunity.id,
-    );
-    if (!mounted) return;
-    setState(() {
-      _alreadyApplied = applied;
-      _checking = false;
-    });
+
+    try {
+      final applied = await _firestoreService.hasApplied(
+        studentId: profile.uid,
+        opportunityId: widget.opportunity.id,
+      );
+      if (!mounted) return;
+      setState(() {
+        _alreadyApplied = applied;
+        _checking = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      // Prevent the UI from getting stuck forever if Firestore
+      // read fails due to permissions/auth timing.
+      setState(() => _checking = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not check application status.'),
+        ),
+      );
+    }
   }
+
 
   Future<void> _apply() async {
     final profile = context.read<UserProvider>().profile;
