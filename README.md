@@ -1,14 +1,103 @@
 # InternLink
 
-A Flutter + Firebase app connecting **students** with **startup** internship
-opportunities. Both roles share one shell with four tabs
-(`Home · Discover · Applications · Profile`), but each tab renders
-completely different content depending on the signed-in user's role.
+A Flutter + Firebase app connecting **students** with **startup** internship opportunities.
+Both roles share one shell with four tabs (`Home · Discover · Applications · Profile`), but each tab renders different content depending on the signed-in user's role.
+
+## Folder structure
+
+```text
+lib/
+  models/            UserProfile, Opportunity, Application, AppNotification
+  services/          AuthService (Firebase Auth + users/{uid}), FirestoreService
+  providers/         UserProvider — live auth + profile state (ChangeNotifier)
+  routes/            AppRoutes — shared route/tab identifiers
+  theme/             AppColors, AppTheme
+  widgets/           Reusable UI: cards, search field, status badges, etc.
+  screens/
+    auth/            LoginScreen, SignupScreen, AuthGate (root router)
+    student/         Home, Discover, Applications
+    startup/         Home (dashboard), Post Opportunity, Applicants
+    profile/         Shared, role-aware ProfileScreen
+    main_shell.dart  Bottom-nav shell; swaps in role-specific screens
+  main.dart
+```
+
+## Features
+
+- Role-aware app shell (student vs startup) with shared bottom navigation.
+- Live user state via `UserProvider` (Firebase Auth + streaming `users/{uid}` profile).
+- Student discovery: searchable list of **verified** opportunities.
+- Student applications + status tracking.
+- Startup dashboard: insights for posted opportunities and applicants.
+- Bookmarks (Saved Opportunities) using a `savedOpportunityIds` array on `users/{uid}`.
+- My Profile / Skills & Interests editor (updates limited fields enforced by Firestore rules).
+
+## Tech stack
+
+- **Flutter** (Dart)
+- **Firebase Authentication** (email/password)
+- **Cloud Firestore** (security rules + indexes)
+- **Provider** pattern via `ChangeNotifier` (`UserProvider`)
+
+## Getting started
+
+1. **Create Firebase project** and enable **Auth (Email/Password)** + **Firestore**.
+2. **Configure FlutterFire** so `firebase_options.dart` is generated/filled:
+   ```bash
+   dart pub global activate flutterfire_cli
+   flutterfire configure
+   ```
+3. **Deploy Firestore security rules and indexes**:
+   ```bash
+   npm install -g firebase-tools
+   firebase login
+   firebase use --add
+   firebase deploy --only firestore:rules,firestore:indexes
+   ```
+4. **Run the app**:
+   ```bash
+   flutter run
+   ```
+
+## Data model (Firestore schema)
+
+### `users/{uid}`
+- `name, email, role` (`"student"|"startup"`)
+- `skills: string[]`
+- `verified: bool`
+- `photoUrl: string|null`
+- `createdAt: timestamp`
+- `savedOpportunityIds: string[]` (bookmarks)
+
+### `opportunities/{id}`
+- `title, companyName, startupId`
+- `verified: bool`
+- `createdAt: timestamp`
+- `imageUrl: string|null`
+- `description` (plus optional listing metadata like category/skillsRequired/commitment)
+
+### `applications/{id}`
+- `opportunityId, studentId`
+- `status: "pending"|"accepted"|"rejected"`
+- `createdAt: timestamp`
+- (optional denormalized fields written at submit time for faster list rendering)
+
+### `notifications/{id}` (read-only from the client)
+- `userId, title, body, read: bool`
+- `createdAt: timestamp`
+
+## Author
+
+**Kellia KAMIKAZI**
+
+---
+
+Additional implementation notes are described below.
 
 ## Color palette
 
-Every color in the app is sourced from `lib/theme/app_colors.dart` — never
-hard-coded inline — so the palette below stays consistent everywhere:
+Every color in the app is sourced from `lib/theme/app_colors.dart` — never hard-coded inline — so the palette below stays consistent everywhere:
+
 
 | Color | Hex | Used for |
 |---|---|---|
@@ -55,30 +144,6 @@ as decoration:
 - **Help & Support** is static content (FAQ + contact info) — no
   backend needed.
 
-## Project structure
-
-```
-lib/
-  models/            UserProfile, Opportunity, Application, AppNotification
-  services/          AuthService (Firebase Auth + users/{uid}), FirestoreService
-  providers/          UserProvider — live auth + profile state (ChangeNotifier)
-  routes/            AppRoutes — shared route/tab identifiers
-  theme/             AppColors, AppTheme
-  widgets/           Reusable UI: cards, search field, status badges, etc.
-  screens/
-    auth/            LoginScreen, SignupScreen, AuthGate (root router)
-    student/         Home, Discover, Applications
-    startup/         Home (dashboard), Post Opportunity, Applicants
-    profile/         Shared, role-aware ProfileScreen
-    main_shell.dart  Bottom-nav shell; swaps in role-specific screens
-  main.dart
-  firebase_options.dart   placeholder — see setup step 3
-
-firestore.rules
-firestore.indexes.json
-firebase.json
-```
-
 ## How role-based routing works
 
 1. `main.dart` wraps the app in a `ChangeNotifierProvider<UserProvider>` and
@@ -102,100 +167,3 @@ firebase.json
    | Applications | Their own applications + statuses | Applicants across all their postings |
    | Profile | Skills, stats, applications | Company info, posted opportunities |
 
-## Setup
-
-### 1. Create the Flutter project shell
-
-This deliverable contains all `lib/` Dart code plus root-level Firebase
-config, but not the native `android/`/`ios/` scaffolding (that's generated
-by the Flutter CLI, which isn't available in the environment this was
-written in). To get a runnable project:
-
-```bash
-flutter create --org com.internlink internlink_app
-cd internlink_app
-# Replace the generated lib/ and pubspec.yaml with the ones from this delivery
-rm -rf lib
-cp -r /path/to/this/delivery/lib .
-cp /path/to/this/delivery/pubspec.yaml .
-cp /path/to/this/delivery/firebase.json .
-cp /path/to/this/delivery/firestore.rules .
-cp /path/to/this/delivery/firestore.indexes.json .
-flutter pub get
-```
-
-### 2. Create a Firebase project
-
-In the [Firebase console](https://console.firebase.google.com):
-- Create a project.
-- Enable **Authentication → Email/Password**.
-- Enable **Firestore Database** (start in production mode — the rules
-  in `firestore.rules` handle access control).
-
-### 3. Wire up Firebase config
-
-```bash
-dart pub global activate flutterfire_cli
-flutterfire configure
-```
-
-This overwrites the placeholder `lib/firebase_options.dart` with your real
-project's keys and registers your Android/iOS/web apps automatically.
-
-### 4. Deploy Firestore rules & indexes
-
-```bash
-npm install -g firebase-tools
-firebase login
-firebase use --add          # select your project
-firebase deploy --only firestore:rules,firestore:indexes
-```
-
-### 5. Run
-
-```bash
-flutter run
-```
-
-## Firestore schema
-
-**`users/{uid}`**
-`name, email, role ("student"|"startup"), skills: string[], verified: bool,
-photoUrl: string|null, createdAt: timestamp` (plus `savedOpportunityIds:
-string[]`, used by the bookmark feature — see design notes above)
-
-**`opportunities/{id}`**
-`title, companyName, startupId, verified: bool, createdAt: timestamp,
-imageUrl: string|null, description` (plus optional `location`,
-`skillsRequired`, `category`, `commitment` used for richer cards)
-
-**`applications/{id}`**
-`opportunityId, studentId, status ("pending"|"accepted"|"rejected"),
-createdAt: timestamp` (plus denormalized `startupId`, `opportunityTitle`,
-`companyName`, `studentName` written at submit time for fast list rendering
-and to support the security rules below without extra reads)
-
-**`notifications/{id}`** *(read-only from the client)*
-`userId, title, body, read: bool, createdAt: timestamp`
-
-## Security rules summary (`firestore.rules`)
-
-- `users/{uid}` — read/write only your own document; role and `verified`
-  are immutable after creation (can't self-verify or change role).
-- `opportunities` — any signed-in user can read, **except** students, who
-  can only read documents where `verified == true`. Only startups can
-  create, always starting `verified: false`, under their own `startupId`.
-- `applications` — students create under their own `studentId`, only
-  against opportunities that are already verified; both the applying
-  student and the owning startup can read; only the startup can update
-  `status`.
-- `notifications` — read-only, scoped to `userId == request.auth.uid`.
-
-## Known simplifications
-
-- Startup `verified` flips from `false → true` only via the Firestore
-  console or a backend admin tool — there's intentionally no client path
-  to self-verify, matching the review-gated flow implied by the spec.
-- Search on the Discover tab filters client-side over the already-fetched
-  verified-opportunities stream (title/company/skills). For a larger
-  catalog you'd want a dedicated search service (e.g. Algolia) instead.
